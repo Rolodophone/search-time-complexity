@@ -1,4 +1,5 @@
 import time
+import random
 
 
 def linearSearch(target, myList):
@@ -30,22 +31,33 @@ def printDebug(msg):
 	pass
 
 
-def testSearches():
+def binaryIncludingSorting():
 	listLengths = range(1_000, 100_000, 1_000)
 	repeats = 10
+	maxListValue = 1_000_000
 
-	text = "n\tlinear\tbinary\n"
+	random.seed(54325)
 
-	for listLength in listLengths:
+	text = "n\tBinary search (including sort)\tBinary search (excluding sort)\tLinear search\n"
+
+	for i, listLength in enumerate(listLengths):
+		print(f"{i}/{len(listLengths)}")
+
 		sumLinear = 0
 		sumBinary = 0
+		sumBinaryWithSort = 0
 
 		for i in range(repeats):
-			testList = list(range(listLength))
+			testList = random.choices(population=range(maxListValue), k=listLength)
 
 			startTime = time.time()
 			linearSearch(-1, testList)
 			timeLinear = time.time() - startTime
+
+			startTime = time.time()
+			testList.sort()
+			binarySearch(-1, testList, 0, len(testList))
+			timeBinaryWithSort = time.time() - startTime
 
 			startTime = time.time()
 			binarySearch(-1, testList, 0, len(testList))
@@ -53,8 +65,9 @@ def testSearches():
 
 			sumLinear += timeLinear
 			sumBinary += timeBinary
+			sumBinaryWithSort += timeBinaryWithSort
 
-		text += f"{listLength}\t{sumLinear/repeats}\t{sumBinary/repeats}\n"
+		text += f"{listLength}\t{sumBinaryWithSort/repeats}\t{sumBinary/repeats}\t{sumLinear/repeats}\n"
 
 	with open("output.txt", "w") as file:
 		file.write(text)
