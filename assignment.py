@@ -73,4 +73,30 @@ def binaryIncludingSorting():
 		file.write(text)
 
 
-testSearches()
+def justBinary():
+	listLengths = range(100_000, 10_000_000, 100_000)
+	repeats = 100
+
+	random.seed(54325)
+
+	text = "n\tBinary search (excluding sort)\n"
+
+	for i, listLength in enumerate(listLengths):
+		print(f"{i}/{len(listLengths)}")
+
+		sumBinary = 0
+
+		for i in range(repeats):
+			testList = list(range(listLength))
+
+			startTime = time.time()
+			binarySearch(-1, testList, 0, len(testList))
+			sumBinary += time.time() - startTime
+
+		text += f"{listLength}\t{sumBinary/repeats}\n"
+
+	with open("output.txt", "w") as file:
+		file.write(text)
+
+
+justBinary()
